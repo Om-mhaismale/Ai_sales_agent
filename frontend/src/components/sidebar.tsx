@@ -41,8 +41,18 @@ export default function Sidebar({ activeSection, setActiveSection }: SidebarProp
                                 active={activeSection === "Chats/Calls"}
                                 onClick={() => setActiveSection("Chats/Calls")}
                             />
-                            <SidebarItem icon={<Bell size={20} />} text="Reminders" />
-                            <SidebarItem icon={<Users size={20} />} text="CRMs" />
+                            <SidebarItem
+                                icon={<Bell size={20} />}
+                                text="Reminders"
+                                active={activeSection === "Reminders"}
+                                onClick={() => setActiveSection("Reminders")}
+                            />
+                            <SidebarItem
+                                icon={<Users size={20} />}
+                                text="CRMs"
+                                active={activeSection === "CRMs"}
+                                onClick={() => setActiveSection("CRMs")}
+                            />
                             <SidebarItem icon={<Settings size={20} />} text="Settings" />
                         </ul>
                     </SidebarContext.Provider>

@@ -2,6 +2,8 @@ import Sidebar from "./components/sidebar";
 import Background from "./components/background";
 import Dashboard from "./components/dashboard";
 import ConvoCall from "./components/convo_call";
+import BookingsCalendar from "./components/reminder";
+import ContactsView from "./components/crms";
 import { useState } from "react";
 
 function App() {
@@ -14,7 +16,8 @@ function App() {
         <div className="flex-1 p-4 overflow-auto">
           {activeSection === "Dashboard" && <Dashboard />}
           {activeSection === "Chats/Calls" && <ConvoCall />}
-          {/* Add more sections as needed */}
+          {activeSection === "Reminders" && <BookingsCalendar />}
+          {activeSection === "CRMs" && <ContactsView />}
         </div>
       </div>
     </Background>
