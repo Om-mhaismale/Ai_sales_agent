@@ -1,6 +1,6 @@
 import { ChevronFirst, ChevronLast, MoreVertical, LayoutDashboard, MessageCircle, Bell, Users, Settings } from "lucide-react"
-import logo from "../assets/image1.png"
-import profile from "../assets/image.png"
+import logo from "/public/bot.png"
+import profile from "../assets/react.svg"
 import { createContext, useContext, useState } from "react"
 
 const SidebarContext = createContext<{ expanded: boolean }>({ expanded: true });
@@ -61,8 +61,8 @@ export default function Sidebar({ activeSection, setActiveSection }: SidebarProp
                         <img src={profile} className="w-10 h-10 rounded-md" />
                         <div className={`flex justify-between items-center overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"}`}>
                             <div className="leading-4">
-                                <h4 className="font-semibold">constGenius</h4>
-                                <span className="text-xs text-gray-600">constgenius@gmail.com</span>
+                                <h4 className="font-semibold">Sales bot</h4>
+                                <span className="text-xs text-gray-600">salesbot@gmail.com</span>
                             </div>
                             <MoreVertical size={20} />
                         </div>
