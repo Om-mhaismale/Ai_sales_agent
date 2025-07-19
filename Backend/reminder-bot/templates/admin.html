@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin - Bookings</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        h2 { margin-bottom: 20px; }
+        table {
+            border-collapse: collapse; width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd; padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+    </style>
+</head>
+<body>
+
+<h2>📋 All Bookings</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th><th>Name</th><th>Phone</th><th>Email</th>
+            <th>Date</th><th>Slot</th><th>Reminder</th><th>Feedback</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for b in bookings %}
+        <tr>
+            <td>{{ b.id }}</td>
+            <td>{{ b.name }}</td>
+            <td>{{ b.phone }}</td>
+            <td>{{ b.email }}</td>
+            <td>{{ b.date }}</td>
+            <td>{{ b.slot }}</td>
+            <td>{{ b.reminder_sent }}</td>
+            <td>{{ b.feedback_sent }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>
