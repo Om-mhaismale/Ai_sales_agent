@@ -1,17 +1,51 @@
 import { ChevronFirst, ChevronLast, MoreVertical, LayoutDashboard, MessageCircle, Bell, Users, Settings } from "lucide-react"
-import logo from "/public/bot.png"
+import logo from "../assets/bot.png"
 import profile from "../assets/react.svg"
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useState, useRef, useEffect, useLayoutEffect } from "react"
 
 const SidebarContext = createContext<{ expanded: boolean }>({ expanded: true });
 
 interface SidebarProps {
     activeSection: string;
     setActiveSection: (section: string) => void;
+    user: any;
+    onLogout: () => void;
 }
 
-export default function Sidebar({ activeSection, setActiveSection }: SidebarProps) {
+export default function Sidebar({ activeSection, setActiveSection, user, onLogout }: SidebarProps) {
     const [expanded, setExpanded] = useState(true)
+    const [menuOpen, setMenuOpen] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
+    const buttonRef = useRef<HTMLButtonElement>(null);
+    // Removed unused menuPos state
+
+    // Close menu when clicking outside
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (
+                menuRef.current &&
+                !menuRef.current.contains(event.target as Node) &&
+                buttonRef.current &&
+                !buttonRef.current.contains(event.target as Node)
+            ) {
+                setMenuOpen(false);
+            }
+        }
+        if (menuOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [menuOpen]);
+
+    // Position menu diagonally above and right of the button
+    useLayoutEffect(() => {
+        if (menuOpen && buttonRef.current) {
+            // Menu positioning logic was here, but menuPos is unused
+        }
+    }, [menuOpen]);
+
     return (
         <>
             <aside className="h-screen">
@@ -57,14 +91,53 @@ export default function Sidebar({ activeSection, setActiveSection }: SidebarProp
                         </ul>
                     </SidebarContext.Provider>
 
-                    <div className="border-t flex p-3 mt-2">
-                        <img src={profile} className="w-10 h-10 rounded-md" />
-                        <div className={`flex justify-between items-center overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"}`}>
+                    <div className="border-t flex p-3 mt-2 relative">
+                        <img
+                            src={user?.photoURL || profile}
+                            className="w-10 h-10 rounded-md"
+                            alt="profile"
+                        />
+                        <div className={`flex justify-between items-center transition-all ${expanded ? "w-52 ml-3" : "w-0"}`}>
                             <div className="leading-4">
-                                <h4 className="font-semibold">Sales bot</h4>
-                                <span className="text-xs text-gray-600">salesbot@gmail.com</span>
+                                <h4 className="font-semibold">{user?.displayName || "Sales bot"}</h4>
+                                <span className="text-xs text-gray-600">{user?.email || "salesbot@gmail.com"}</span>
                             </div>
-                            <MoreVertical size={20} />
+                            <div className="relative flex items-center">
+                                <button
+                                    ref={buttonRef}
+                                    onClick={() => setMenuOpen((open) => !open)}
+                                    className="ml-2 p-1 rounded hover:bg-gray-200/30 cursor-pointer"
+                                    aria-label="Open menu"
+                                    type="button"
+                                >
+                                    <MoreVertical size={20} />
+                                </button>
+                                {menuOpen && (
+                                    <div
+                                        ref={menuRef}
+                                        className="absolute left-7 bottom-full mb-2 bg-[#06d69ef1] bg-opacity-10 shadow-lg rounded min-w-[200px] z-50"
+                                    >
+                                        <button
+                                            className="block w-full text-left px-4 py-2 cursor-pointer hover:bg-[#529482] text-gray-800"
+                                            onClick={() => {
+                                                setMenuOpen(false);
+                                                onLogout();
+                                            }}
+                                        >
+                                            Logout
+                                        </button>
+                                        <button
+                                            className="block w-full text-left px-4 py-2 cursor-pointer hover:bg-[#529482] text-gray-800"
+                                            onClick={() => {
+                                                setMenuOpen(false);
+                                                onLogout();
+                                            }}
+                                        >
+                                            Sign in/up with other account
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </nav>
