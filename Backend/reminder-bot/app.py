@@ -54,11 +54,51 @@ def get_bookings():
             "date": b.date,
             "slot": b.slot,
             "reminder_sent": b.reminder_sent,
-            "feedback_sent": b.feedback_sent
+            "feedback_sent": b.feedback_sent,
+            "status": getattr(b, 'status', 'scheduled'),  # Handle missing status field
+            "notes": getattr(b, 'notes', None)  # Handle missing notes field
         })
     
     db.close()
     return jsonify(bookings_list)
+
+# API: Update a booking (for cancellation, status changes, etc.)
+@app.route("/api/bookings/<int:booking_id>", methods=["PUT"])
+def update_booking(booking_id):
+    try:
+        data = request.json
+        db = SessionLocal()
+        
+        booking = db.query(Booking).filter(Booking.id == booking_id).first()
+        if not booking:
+            db.close()
+            return jsonify({"success": False, "message": "Booking not found"}), 404
+        
+        # Update fields that are provided
+        if "status" in data:
+            booking.status = data["status"]
+            
+        if "notes" in data:
+            booking.notes = data["notes"]
+            
+        # Update other fields if provided
+        if "name" in data:
+            booking.name = data["name"]
+        if "phone" in data:
+            booking.phone = data["phone"]
+        if "email" in data:
+            booking.email = data["email"]
+        if "date" in data:
+            booking.date = data["date"]
+        if "slot" in data:
+            booking.slot = data["slot"]
+            
+        db.commit()
+        db.close()
+        
+        return jsonify({"success": True, "message": "Booking updated successfully"})
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Error updating booking: {str(e)}"}), 500
 
 # API: Check login credentials
 @app.route("/api/login", methods=["POST"])
